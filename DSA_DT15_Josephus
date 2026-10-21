@@ -1,0 +1,12 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    char name[30];
+    Node* next;
+};
+
+struct CircularList {
+    Node* tail = NULL;   // tail->next = head
+    int size = 0;
+};
