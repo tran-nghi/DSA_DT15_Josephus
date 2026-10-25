@@ -11,7 +11,36 @@ struct CircularList {
     Node* tail = NULL;  
     int size = 0;
 };
+bool isDuplicate(const CircularList& L, const char* name) {
+    if (L.tail == NULL) return false;
 
+    Node* p = L.tail->next; // head
+    do {
+        if (strcmp(p->name, name) == 0) {
+            return true;
+        }
+        p = p->next;
+    } while (p != L.tail->next);
+
+    return false;
+}
+void removeAfter(CircularList& L, Node* prev) {
+    if (L.tail == NULL || prev == NULL || L.size == 0) return;
+    Node* del = prev->next;
+    if (L.size == 1) {
+        delete del;
+        L.tail = NULL;
+        L.size = 0;
+        return;
+    }
+    prev->next = del->next;
+    if (del == L.tail) {
+        L.tail = prev;
+    }
+
+    delete del;
+    L.size--;
+}
 void addPlayer(CircularList& L, const char* nameInput) {
     Node* p = new Node;
     int i = 0;
