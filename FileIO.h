@@ -5,8 +5,8 @@ using namespace std;
 
 bool realWord(istream& in, char* buf){
 	char c;
-	while (in.get(c)&&(c==' '||c=='\n'||c=='\t'||c=='\r')){}
-	if (!n) return false;
+	while (in.get(c) && isspace(static_cast<unsigned char>(c))) {}
+	if (!in) return false;
 	int i=0;
 	do{
 		if (i<29) buf[i++]=c;
@@ -24,10 +24,11 @@ int loadPlayers(CircularList& L, istream& in, int n){
 	return count;
 }
 void savePlayers(const CircularList& L, ostream& out){
-	if (L.tail == nullptr) reutrn;
+	if (L.tail == nullptr) return;
 	Node* p=L.tail->next;
 	do{
 		out<< p->name <<"\n";
+		p = p->next;
 	} while (p!= L.tail->next);
 }
 void saveResult(const CircularList& L, ostream& out){
