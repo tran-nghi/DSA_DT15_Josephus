@@ -1,6 +1,8 @@
 # pragma once
 #include <iostream>
 #include "CircularList.h"
+#include <fstream>
+#include <string>
 using namespace std;
 
 bool realWord(istream& in, char* buf){
@@ -14,14 +16,23 @@ bool realWord(istream& in, char* buf){
 	buf[i] ='\0';
 	return true;
 	}
-int loadPlayers(CircularList& L, istream& in, int n){
-	char name[30];
-	int count = 0;
-	while (count < n&& realWord(in, name)){
-		addPlayer(L, name);
-		count++;
-	}
-	return count;
+int loadPlayers(CircularList& L, istream& in) {
+    char line[64];
+    int count = 0;
+    while (in.getline(line, sizeof(line))) {
+        trim(line);                       // trim nằm trong Menu.h, có thể chuyển sang CircularList.h
+        if (line[0] == '\0' || isDuplicate(L, line)) continue;
+        addPlayer(L, line);
+        count++;
+    }
+    return count;
+}
+
+void saveHistory(int n, int k, const char* winner) {
+    ofstream f("history.csv", ios::app);
+    if (!f) return;
+    f << n << "," << k << "," << winner << "\n";
+}
 }
 void savePlayers(const CircularList& L, ostream& out){
 	if (L.tail == nullptr) return;
