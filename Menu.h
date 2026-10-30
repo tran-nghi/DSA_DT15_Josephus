@@ -65,6 +65,8 @@ inline void showMenu() {
          << "2. Hien thi vong tron\n"
          << "3. Bat dau tro choi\n"
          << "4. Xoa toan bo danh sach\n"
+         << "5. Luu file\n"
+         << "6. Doc file\n"
          << "0. Thoat\n"
          << "=========================================\n";
 }
@@ -73,14 +75,30 @@ inline void runMenu() {
     int choice;
     do {
         showMenu();
-        choice = inputInt("Chon chuc nang: ", 0, 4);
+        choice = inputInt("Chon chuc nang: ", 0, 6);
         switch (choice) {
             case 1: menuAddPlayer(L); break;
             case 2: cout << "Vong tron (" << L.size << " nguoi): "; display(L); break;
             case 3: menuPlay(L); break;
             case 4: clear(L); cout << "Da xoa toan bo danh sach.\n"; break;
+            case 5: menuSave(L); break;
+            case 6: menuLoad(L); break;
             case 0: cout << "Tam biet!\n"; break;
         }
+ inline void menuSave(const CircularList& L) {
+    if (L.size < 1) { cout << "Danh sach rong, khong co gi de luu!\n"; return; }
+    ofstream f("players.txt");
+    if (!f) { cout << "Khong mo duoc file de ghi!\n"; return; }
+    savePlayers(L, f);
+    cout << "Da luu " << L.size << " nguoi vao players.txt\n";
+}
+inline void menuLoad(CircularList& L) {
+    ifstream f("players.txt");
+    if (!f) { cout << "Khong tim thay file players.txt\n"; return; }
+    clear(L);
+    int c = loadPlayers(L, f);
+    cout << "Da doc " << c << " nguoi tu players.txt\n";
+}       
     } while (choice != 0);
     clear(L); 
 }
