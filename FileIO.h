@@ -35,7 +35,6 @@ void saveHistory(int n, int k, const char* winner) {
     if (!f) return;
     f << n << "," << k << "," << winner << "\n";
 }
-}
 void savePlayers(const CircularList& L, ostream& out){
 	if (L.tail == nullptr) return;
 	Node* p=L.tail->next;
