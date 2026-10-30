@@ -6,6 +6,7 @@
 #include "CircularList.h"
 #include "Josephus.h"
 #include "FileIO.h"
+#include "fstream"
 using namespace std;
 inline void trim(char* s) {
     int n = (int)strlen(s);
@@ -14,11 +15,13 @@ inline void trim(char* s) {
     while (s[start] == ' ') start++;
     if (start > 0) memmove(s, s + start, strlen(s + start) + 1);
 }
-inline void inputString(const char* msg, char* buf, int size) {
+inline bool inputString(const char* msg, char* buf, int size) {
     cout << msg;
     cin.getline(buf, size);
-    if (cin.fail()) { cin.clear(); cin.ignore(10000, '\n'); buf[0] = '\0'; }
+    bool ok = true;
+    if (cin.fail()) { cin.clear(); cin.ignore(10000, '\n'); buf[0] = '\0'; ok = false; }
     trim(buf);
+    return ok;
 }
 inline int inputInt(const char* msg, int lo, int hi) {
     char buf[50];
@@ -32,7 +35,7 @@ inline int inputInt(const char* msg, int lo, int hi) {
 }
 inline void menuAddPlayer(CircularList& L) {
     char name[30];
-    inputString("Nhap ten nguoi choi: ", name, 30);
+    if (!inputString("Nhap ten nguoi choi: ", name, 30)) { cout << "Ten qua dai (toi da 29 ky tu)!\n"; return; }
     if (name[0] == '\0') { cout << "Ten khong duoc de trong!\n"; return; }
     if (isDuplicate(L, name)) { cout << "Ten \"" << name << "\" da ton tai!\n"; return; }
     addPlayer(L, name);
@@ -53,11 +56,13 @@ inline void menuPlay(const CircularList& L) {
         cout << "Danh sach trong, can it nhat 1 nguoi de choi!\n"; 
         return; 
     }
-    int k = inputInt("Nhap buoc nhay k (loai nguoi thu k): ", 1, 1000000);
+       int k = inputInt("Nhap buoc nhay k (loai nguoi thu k): ", 1, 1000000);
+    int n0 = L.size;                       // THEM
     CircularList C = copyList(L);
     cout << "\n--- BAT DAU (dem tu nguoi dau tien: " << C.tail->next->name << ") ---\n";
     josephus(C, k);
-    clear(C); 
+    if (C.tail != NULL) saveHistory(n0, k, C.tail->name);   // THEM
+    clear(C);
 }
 inline void showMenu() {
     cout << "\n=========== TRO CHOI JOSEPHUS ===========\n"
@@ -85,6 +90,8 @@ inline void runMenu() {
             case 6: menuLoad(L); break;
             case 0: cout << "Tam biet!\n"; break;
         }
+     }while (choice != 0);
+ }
  inline void menuSave(const CircularList& L) {
     if (L.size < 1) { cout << "Danh sach rong, khong co gi de luu!\n"; return; }
     ofstream f("players.txt");
