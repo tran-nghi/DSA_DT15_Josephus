@@ -49,7 +49,10 @@ inline CircularList copyList(const CircularList& L) {
     return C;
 }
 inline void menuPlay(const CircularList& L) {
-    if (L.size < 2) { cout << "Can it nhat 2 nguoi de choi!\n"; return; }
+    if (L.size < 1) { 
+        cout << "Danh sach trong, can it nhat 1 nguoi de choi!\n"; 
+        return; 
+    }
     int k = inputInt("Nhap buoc nhay k (loai nguoi thu k): ", 1, 1000000);
     CircularList C = copyList(L);
     cout << "\n--- BAT DAU (dem tu nguoi dau tien: " << C.tail->next->name << ") ---\n";
