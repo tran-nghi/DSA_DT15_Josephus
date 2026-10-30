@@ -3,6 +3,7 @@
 #include "CircularList.h"
 #include <fstream>
 #include <string>
+#include <cstring>
 using namespace std;
 
 bool realWord(istream& in, char* buf){
@@ -20,7 +21,8 @@ int loadPlayers(CircularList& L, istream& in) {
     char line[64];
     int count = 0;
     while (in.getline(line, sizeof(line))) {
-        trim(line);                       // trim nằm trong Menu.h, có thể chuyển sang CircularList.h
+        int n = (int)strlen(line);
+        while (n > 0 && (line[n - 1] == '\r' || line[n - 1] == ' ')) line[--n] = '\0';
         if (line[0] == '\0' || isDuplicate(L, line)) continue;
         addPlayer(L, line);
         count++;
